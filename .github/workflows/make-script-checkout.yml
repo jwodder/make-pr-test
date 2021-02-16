@@ -17,7 +17,7 @@ jobs:
           ts="$(date +%s)"
           branch_name="script-checkout/pr-$ts"
 
-          git clone "https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" repo
+          git --depth 1 --no-single-branch clone "https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" repo
           cd repo
           git checkout -b "$branch_name"
           mkdir -p script-checkout
