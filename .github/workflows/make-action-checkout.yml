@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  test:
+  make:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -28,6 +28,8 @@ jobs:
           git push -u origin "$branch_name"
           cat .git/refs/remotes/origin/"$branch_name"
           gh pr create --title "Add file action-checkout/$ts.txt" --body "Created by the 'Make a PR from an action checkout' workflow"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 # vim:set et sts=2:
