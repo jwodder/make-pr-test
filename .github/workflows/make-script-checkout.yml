@@ -1,0 +1,34 @@
+name: Make a PR from a scripted checkout
+
+on:
+  push:
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create PR
+        run: |
+          set -ex
+
+          git config --global user.email "test@github.land"
+          git config --global user.name "GitHub Almighty"
+
+          ts="$(date +%s)"
+          branch_name="action-checkout/pr-$ts"
+
+          git clone --depth 1 "https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" repo
+          cd repo
+          git checkout -b "$branch_name"
+          mkdir -p action-checkout
+          date --date=@"$ts" > action-checkout/$ts.txt
+          git add action-checkout
+          git commit -m "Add file action-checkout/$ts.txt"
+          git push -u origin "$branch_name"
+          cat .git/refs/remotes/origin/"$branch_name"
+          gh pr create --title "Add file action-checkout/$ts.txt" --body "Created by the 'Make a PR from an action checkout' workflow"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+# vim:set et sts=2:
